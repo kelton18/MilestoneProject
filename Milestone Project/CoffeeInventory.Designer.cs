@@ -35,33 +35,36 @@
             selectFileDialog = new OpenFileDialog();
             InventoryLbl = new Label();
             SelectFileLbl = new Label();
+            RowSelectorComboBox = new ComboBox();
             SuspendLayout();
             // 
             // AddNewItemBtn
             // 
-            AddNewItemBtn.Location = new Point(42, 408);
+            AddNewItemBtn.Location = new Point(198, 408);
             AddNewItemBtn.Margin = new Padding(4, 3, 4, 3);
             AddNewItemBtn.Name = "AddNewItemBtn";
             AddNewItemBtn.Size = new Size(105, 38);
             AddNewItemBtn.TabIndex = 1;
             AddNewItemBtn.Text = "Add Item";
             AddNewItemBtn.UseVisualStyleBackColor = true;
+            AddNewItemBtn.Click += this.AddNewItemBtn_Click;
             // 
             // ViewEditBtn
             // 
-            ViewEditBtn.Location = new Point(380, 408);
+            ViewEditBtn.Location = new Point(506, 408);
             ViewEditBtn.Margin = new Padding(4, 3, 4, 3);
             ViewEditBtn.Name = "ViewEditBtn";
             ViewEditBtn.Size = new Size(133, 38);
             ViewEditBtn.TabIndex = 2;
             ViewEditBtn.Text = "View/Edit";
             ViewEditBtn.UseVisualStyleBackColor = true;
+            ViewEditBtn.Click += this.ViewEditBtn_Click;
             // 
             // label1
             // 
             label1.AutoSize = true;
             label1.Font = new Font("Segoe UI", 18F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            label1.Location = new Point(116, 9);
+            label1.Location = new Point(224, 9);
             label1.Margin = new Padding(4, 0, 4, 0);
             label1.Name = "label1";
             label1.Size = new Size(336, 41);
@@ -70,7 +73,7 @@
             // 
             // ShowInventoryBtn
             // 
-            ShowInventoryBtn.Location = new Point(216, 408);
+            ShowInventoryBtn.Location = new Point(347, 408);
             ShowInventoryBtn.Margin = new Padding(4, 3, 4, 3);
             ShowInventoryBtn.Name = "ShowInventoryBtn";
             ShowInventoryBtn.Size = new Size(105, 38);
@@ -88,7 +91,7 @@
             InventoryLbl.Font = new Font("Courier New", 10.2F, FontStyle.Bold, GraphicsUnit.Point, 0);
             InventoryLbl.Location = new Point(31, 97);
             InventoryLbl.Name = "InventoryLbl";
-            InventoryLbl.Size = new Size(482, 289);
+            InventoryLbl.Size = new Size(798, 289);
             InventoryLbl.TabIndex = 12;
             InventoryLbl.Text = "InventoryLbl";
             // 
@@ -100,11 +103,20 @@
             SelectFileLbl.TabIndex = 13;
             SelectFileLbl.Text = "selectFileLbl";
             // 
+            // RowSelectorComboBox
+            // 
+            RowSelectorComboBox.FormattingEnabled = true;
+            RowSelectorComboBox.Location = new Point(29, 408);
+            RowSelectorComboBox.Name = "RowSelectorComboBox";
+            RowSelectorComboBox.Size = new Size(151, 36);
+            RowSelectorComboBox.TabIndex = 14;
+            // 
             // CoffeeInventory
             // 
             AutoScaleDimensions = new SizeF(11F, 28F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(555, 473);
+            ClientSize = new Size(841, 473);
+            Controls.Add(RowSelectorComboBox);
             Controls.Add(SelectFileLbl);
             Controls.Add(InventoryLbl);
             Controls.Add(ShowInventoryBtn);
@@ -127,5 +139,6 @@
         private OpenFileDialog selectFileDialog;
         private Label InventoryLbl;
         private Label SelectFileLbl;
+        private ComboBox RowSelectorComboBox;
     }
 }

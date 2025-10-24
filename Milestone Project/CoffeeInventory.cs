@@ -1,16 +1,23 @@
+using System.Drawing.Text;
+using System.Runtime.CompilerServices;
+using System.Security.Cryptography.X509Certificates;
+using System.Text;
 using System.Windows.Forms;
 using static System.Windows.Forms.LinkLabel;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
 namespace Milestone_Project
 {
+
+
     public partial class CoffeeInventory : Form
     {
+        private List<CoffeeItem> inventoryList = new List<CoffeeItem>();
         public CoffeeInventory()
         {
             InitializeComponent();
 
-            selectFileDialog.InitialDirectory = Application.StartupPath + @"Data";
+            selectFileDialog.InitialDirectory = Application.StartupPath + @"\Data";
             selectFileDialog.Title = "Browse Txt Files";
             selectFileDialog.DefaultExt = "txt";
             selectFileDialog.Filter = "Text files (*.txt)|*.txt|All files (*.*)|";
@@ -26,53 +33,94 @@ namespace Milestone_Project
             ReadInventory();
         }
 
+        private void AddNewItemBtn_Click(object sender, EventArgs e)
+        {
+            IncrementItemQty();
+        }
+
+        //FIXME
+        private void ViewEditBtn_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void IncrementItemQty()
+        {
+            if (RowSelectorComboBox.SelectedItem is CoffeeItem selectedItem)
+            {
+                selectedItem.Qty++;
+                DisplayInventory();
+            }
+            else
+            {
+                MessageBox.Show("Please select an item first", "No selection", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
+
+
+        }
+
         private void ReadInventory()
         {
             if (selectFileDialog.ShowDialog() == DialogResult.OK)
             {
                 string txtFile = "";
                 string dirLocation = "";
+                dirLocation = Path.GetFullPath(selectFileDialog.FileName);
+
 
                 txtFile = selectFileDialog.FileName;
-                dirLocation = Path.GetFullPath(selectFileDialog.FileName);
                 SelectFileLbl.Text = txtFile;
                 SelectFileLbl.Visible = true;
 
-                try
-                {
+       
                     string[] lines = File.ReadAllLines(txtFile);
-                    DisplayInventory(lines);
-                }
-                catch (Exception ex)
+                    inventoryList.Clear();
+
+                foreach (string line in lines)
                 {
-                    MessageBox.Show($"Error reading file: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    string[] parts = line.Split(',');
+                    if (parts.Length >= 3 && int.TryParse(parts[2], out int qty))
+                    {
+                        inventoryList.Add(new CoffeeItem
+                        {
+                            Name = parts[0].Trim(),
+                            Category = parts[1].Trim(),
+                            Qty = qty
+                        });
+                    }
                 }
+
+                RowSelectorComboBox.DataSource = null;
+                RowSelectorComboBox.DataSource = inventoryList;
+                RowSelectorComboBox.DisplayMember = "Name";
+
+                DisplayInventory();
+  
             }
 
         }
 
-        private void DisplayInventory(string[] lines)
+        //private void SaveInventoryToFile(string filePath)
+        //{
+        //    var lines = inventoryList.Select(i => $"{i.Name},{i.Category},{i.Qty}");
+        //    File.WriteAllLines(filePath, lines);
+        //}
+
+ 
+        private void DisplayInventory()
         {
-            
             const int PadSpace = 20;
-            string header1 = "Item", header2 = "Category", header3 = "Qty";
-            string headerLine1 = "----", headerLine2 = "---------", headerLine3 = "---";
+            StringBuilder sb = new StringBuilder();
 
+            sb.AppendLine($"{"Item".PadRight(PadSpace)}{"Category".PadRight(PadSpace)}{"Qty".PadRight(PadSpace)}");
+            sb.AppendLine($"{"----".PadRight(PadSpace)}{"---------".PadRight(PadSpace)}{"---".PadRight(PadSpace)}");
 
-            InventoryLbl.Text = "";
-            InventoryLbl.Text = string.Format("{0}{1}{2}\n", header1.PadRight(PadSpace), header2.PadRight(PadSpace), header3.PadRight(PadSpace));
-            InventoryLbl.Text += string.Format("{0}{1}{2}\n", headerLine1.PadRight(PadSpace), headerLine2.PadRight(PadSpace), headerLine3.PadRight(PadSpace));
-
-            foreach (string line in lines)
+            foreach (var item in inventoryList)
             {
-                string[] parts = line.Split(",");
-                foreach (string item in parts)
-                {
-                    InventoryLbl.Text += item.PadRight(PadSpace);
-                }
-                InventoryLbl.Text += "\n";
+                sb.AppendLine($"{item.Name.PadRight(PadSpace)}{item.Category.PadRight(PadSpace)}{item.Qty.ToString().PadRight(PadSpace)}");
             }
 
+            InventoryLbl.Text = sb.ToString();
             InventoryLbl.Visible = true;
         }
     }
