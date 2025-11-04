@@ -73,8 +73,8 @@ namespace Milestone_Project
                 SelectFileLbl.Visible = true;
 
        
-                    string[] lines = File.ReadAllLines(txtFile);
-                    inventoryList.Clear();
+                string[] lines = File.ReadAllLines(txtFile);
+                inventoryList.Clear();
 
                 foreach (string line in lines)
                 {
