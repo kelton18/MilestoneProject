@@ -5,18 +5,25 @@ using System.Text;
 using System.Windows.Forms;
 using static System.Windows.Forms.LinkLabel;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement;
+using InventoryManager.Library;
 
-namespace Milestone_Project
+namespace InventoryManager
 {
-
-
     public partial class CoffeeInventory : Form
     {
-        private List<CoffeeItem> inventoryList = new List<CoffeeItem>();
+
+        private InventoryManager.Library.InventoryManager inventoryManager = new InventoryManager.Library.InventoryManager();
+        private string currentFilePath = "";
+
+
+
+
         public CoffeeInventory()
         {
             InitializeComponent();
 
+
+            //"C:\Users\Kelton\source\repos\Milestone Project"
             selectFileDialog.InitialDirectory = Application.StartupPath + @"\Data";
             selectFileDialog.Title = "Browse Txt Files";
             selectFileDialog.DefaultExt = "txt";
@@ -30,83 +37,56 @@ namespace Milestone_Project
 
         private void ShowInventoryBtn_Click(object sender, EventArgs e)
         {
-            ReadInventory();
+            if (selectFileDialog.ShowDialog() == DialogResult.OK)
+            {
+                currentFilePath = selectFileDialog.FileName;
+                SelectFileLbl.Text = currentFilePath;
+                SelectFileLbl.Visible = true;
+
+                try
+                {
+                    inventoryManager.ReadInventory(currentFilePath);
+
+                    RowSelectorComboBox.DataSource = null;
+                    RowSelectorComboBox.DataSource = inventoryManager.GetInventory();
+                    RowSelectorComboBox.DisplayMember = "Name";
+
+                    DisplayInventory();
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"Error reading inventory: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
         }
 
         private void AddNewItemBtn_Click(object sender, EventArgs e)
         {
-            IncrementItemQty();
+            if (RowSelectorComboBox.SelectedItem is CoffeeItem selectedItem)
+            {
+                try
+                {
+                    inventoryManager.IncrementItemQty(selectedItem.Name);
+                    DisplayInventory();
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"Error: {ex.Message}", "Update Failed", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                }
+            }
+            else
+            {
+                MessageBox.Show("Please select an item first.", "No Selection", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
         }
 
         //FIXME
         private void ViewEditBtn_Click(object sender, EventArgs e)
         {
+            MessageBox.Show("Edit feature not implemented yet.");
 
         }
 
-        private void IncrementItemQty()
-        {
-            if (RowSelectorComboBox.SelectedItem is CoffeeItem selectedItem)
-            {
-                selectedItem.Qty++;
-                DisplayInventory();
-            }
-            else
-            {
-                MessageBox.Show("Please select an item first", "No selection", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-            }
-
-
-        }
-
-        private void ReadInventory()
-        {
-            if (selectFileDialog.ShowDialog() == DialogResult.OK)
-            {
-                string txtFile = "";
-                string dirLocation = "";
-                dirLocation = Path.GetFullPath(selectFileDialog.FileName);
-
-
-                txtFile = selectFileDialog.FileName;
-                SelectFileLbl.Text = txtFile;
-                SelectFileLbl.Visible = true;
-
-       
-                string[] lines = File.ReadAllLines(txtFile);
-                inventoryList.Clear();
-
-                foreach (string line in lines)
-                {
-                    string[] parts = line.Split(',');
-                    if (parts.Length >= 3 && int.TryParse(parts[2], out int qty))
-                    {
-                        inventoryList.Add(new CoffeeItem
-                        {
-                            Name = parts[0].Trim(),
-                            Category = parts[1].Trim(),
-                            Qty = qty
-                        });
-                    }
-                }
-
-                RowSelectorComboBox.DataSource = null;
-                RowSelectorComboBox.DataSource = inventoryList;
-                RowSelectorComboBox.DisplayMember = "Name";
-
-                DisplayInventory();
-  
-            }
-
-        }
-
-        //private void SaveInventoryToFile(string filePath)
-        //{
-        //    var lines = inventoryList.Select(i => $"{i.Name},{i.Category},{i.Qty}");
-        //    File.WriteAllLines(filePath, lines);
-        //}
-
- 
         private void DisplayInventory()
         {
             const int PadSpace = 20;
@@ -115,7 +95,7 @@ namespace Milestone_Project
             sb.AppendLine($"{"Item".PadRight(PadSpace)}{"Category".PadRight(PadSpace)}{"Qty".PadRight(PadSpace)}");
             sb.AppendLine($"{"----".PadRight(PadSpace)}{"---------".PadRight(PadSpace)}{"---".PadRight(PadSpace)}");
 
-            foreach (var item in inventoryList)
+            foreach (var item in inventoryManager.GetInventory())
             {
                 sb.AppendLine($"{item.Name.PadRight(PadSpace)}{item.Category.PadRight(PadSpace)}{item.Qty.ToString().PadRight(PadSpace)}");
             }
@@ -123,5 +103,11 @@ namespace Milestone_Project
             InventoryLbl.Text = sb.ToString();
             InventoryLbl.Visible = true;
         }
+
+
+
+
+
+
     }
 }

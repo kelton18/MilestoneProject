@@ -1,4 +1,4 @@
-﻿namespace Milestone_Project
+﻿namespace InventoryManager
 {
     partial class CoffeeInventory
     {

@@ -10,9 +10,17 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Update="Data\DataFile.txt">
+    <None Remove="Data\DataFile.txt" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="Data\DataFile.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\InventoryManager.Library\InventoryManager.Library.csproj" />
   </ItemGroup>
 
 </Project>
