@@ -1,4 +1,4 @@
-﻿namespace Milestone_Project
+﻿namespace InventoryManager
 {
     partial class CoffeeInventory
     {
@@ -45,9 +45,9 @@
             AddNewItemBtn.Name = "AddNewItemBtn";
             AddNewItemBtn.Size = new Size(105, 38);
             AddNewItemBtn.TabIndex = 1;
-            AddNewItemBtn.Text = "Add Item";
+            AddNewItemBtn.Text = "Add Qty";
             AddNewItemBtn.UseVisualStyleBackColor = true;
-            AddNewItemBtn.Click += this.AddNewItemBtn_Click;
+            AddNewItemBtn.Click += AddNewItemBtn_Click;
             // 
             // ViewEditBtn
             // 
@@ -58,7 +58,7 @@
             ViewEditBtn.TabIndex = 2;
             ViewEditBtn.Text = "View/Edit";
             ViewEditBtn.UseVisualStyleBackColor = true;
-            ViewEditBtn.Click += this.ViewEditBtn_Click;
+            ViewEditBtn.Click += ViewEditBtn_Click;
             // 
             // label1
             // 

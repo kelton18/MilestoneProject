@@ -4,12 +4,14 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Milestone_Project
+namespace InventoryManager.Library
 {
     public class CoffeeItem
     {
         public string Name { get; set; }
         public string Category { get; set; }
         public int Qty { get; set; }
+
+        public override string ToString() => $"{Name} ({Category}) - {Qty}";
     }
 }

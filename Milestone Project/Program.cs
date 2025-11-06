@@ -1,4 +1,7 @@
-namespace Milestone_Project
+using System;
+using System.Windows.Forms;
+
+namespace InventoryManager
 {
     internal static class Program
     {
@@ -8,9 +11,11 @@ namespace Milestone_Project
         [STAThread]
         static void Main()
         {
-            // To customize application configuration such as set high DPI settings or default font,
-            // see https://aka.ms/applicationconfiguration.
-            ApplicationConfiguration.Initialize();
+            // Equivalent initialization to ApplicationConfiguration.Initialize()
+            Application.SetHighDpiMode(HighDpiMode.SystemAware);
+            Application.EnableVisualStyles();
+            Application.SetCompatibleTextRenderingDefault(false);
+
             Application.Run(new CoffeeInventory());
         }
     }
